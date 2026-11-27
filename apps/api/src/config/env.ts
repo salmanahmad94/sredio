@@ -11,6 +11,11 @@ const schema = z.object({
 
     MONGODB_URI: z.string().default('mongodb://127.0.0.1:27017/sredio'),
 
+    // 32 bytes, base64. Encrypts GitHub tokens and webhook secrets at rest.
+    ENCRYPTION_KEY: z
+        .base64()
+        .refine((value) => Buffer.from(value, 'base64').length === 32, 'Must decode to 32 bytes.'),
+
     LOG_DIRECTORY: z.string().default('logs')
 });
 

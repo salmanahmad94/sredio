@@ -1,7 +1,10 @@
 import logger, { type Logger } from '../config/winston';
+import User from '../models/user';
+import UserService from '../services/user';
 
 export interface Container {
     logger: Logger;
+    userService: UserService;
 }
 
 /**
@@ -10,4 +13,8 @@ export interface Container {
  */
 export const container = {} as Container;
 
-export default (): Container => Object.assign(container, { logger });
+export default (): Container =>
+    Object.assign(container, {
+        logger,
+        userService: new UserService(User, logger)
+    });
