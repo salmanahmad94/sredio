@@ -4,9 +4,10 @@ import type { Logger } from '../config/winston';
 import HttpError from '../errors/HttpError';
 import { getTrigger } from '../integrations/registry';
 import type { ZapDocument, ZapModel } from '../models/zap';
-import { encrypt } from '../utils/crypto';
+import { decrypt, encrypt } from '../utils/crypto';
 
 import type UserService from './user';
+import type ZapRunService from './zapRun';
 
 interface Step {
     app: string;
@@ -34,6 +35,7 @@ const sameTrigger = (a: Step, b: ZapStep): boolean =>
 export default class ZapService {
     constructor(
         private readonly zaps: ZapModel,
+        private readonly zapRuns: ZapRunService,
         private readonly users: UserService,
         private readonly publicUrl: string | undefined,
         private readonly logger: Logger
@@ -45,6 +47,15 @@ export default class ZapService {
 
     findById(id: string): Promise<ZapDocument | null> {
         return this.zaps.findById(id).exec();
+    }
+
+    findByIdWithHookSecret(id: string): Promise<ZapDocument | null> {
+        return this.zaps.findById(id).select('+hook.secret').exec();
+    }
+
+    hookSecret(zap: ZapDocument): string {
+        if (!zap.hook?.secret) throw new Error(`Zap ${zap.id} has no webhook secret loaded.`);
+        return decrypt(zap.hook.secret);
     }
 
     async create(ownerId: string, input: ZapInput): Promise<ZapDocument> {
@@ -106,6 +117,7 @@ export default class ZapService {
             await this.unsubscribe(toStep(zap.trigger), zap.hook.id, token);
         }
 
+        await this.zapRuns.removeForZap(zap.id);
         await zap.deleteOne();
     }
 

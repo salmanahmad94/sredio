@@ -9,6 +9,7 @@ import { logFormat } from '../config/morgan';
 import configurePassport from '../config/passport';
 import logger from '../config/winston';
 import HttpError from '../errors/HttpError';
+import webhooks from '../webhooks';
 
 export default (app: Express) => {
     // Behind ngrok or a load balancer: trust X-Forwarded-* for the client IP and protocol.
@@ -26,6 +27,10 @@ export default (app: Express) => {
     // Security headers: https://helmetjs.github.io
 
     app.use(helmet());
+
+    // Webhooks need the raw body for signature checks, so they go before the JSON parser.
+
+    app.use('/webhooks', webhooks());
 
     app.use(express.json({ limit: '100kb' }));
 
