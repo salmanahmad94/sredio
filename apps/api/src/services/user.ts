@@ -47,4 +47,9 @@ export default class UserService {
     async touchLastLogin(userId: string): Promise<void> {
         await this.users.updateOne({ _id: userId }, { $set: { lastLogin: new Date() } });
     }
+
+    /** Revokes every token issued to the user so far. */
+    async revokeSessions(userId: string): Promise<void> {
+        await this.users.updateOne({ _id: userId }, { $inc: { tokenVersion: 1 } });
+    }
 }
