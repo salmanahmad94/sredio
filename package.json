@@ -8,6 +8,7 @@
     ],
     "scripts": {
         "dev": "npm run dev -w @sredio/api",
+        "test": "npm test -w @sredio/api",
         "typecheck": "npm run typecheck -w @sredio/api",
         "format": "prettier --write \"apps/*/src/**/*.ts\""
     },

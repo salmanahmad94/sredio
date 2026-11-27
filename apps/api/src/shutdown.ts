@@ -1,9 +1,11 @@
 import type { Server } from 'node:http';
 
+import mongoose from 'mongoose';
+
 import logger from './config/winston';
 
 /**
- * Stops in reverse boot order, starting with no longer taking requests. Handles Ctrl+C,
+ * Stops in reverse boot order: stop taking requests, then close the database. Handles Ctrl+C,
  * container/PM2 SIGTERM, and PM2's 'shutdown' message on Windows.
  */
 export default (server: Server) => {
@@ -20,6 +22,11 @@ export default (server: Server) => {
                 server.close((error) => (error ? reject(error) : resolve()))
             );
             logger.info('HTTP server stopped.', { label: 'APP' });
+
+            // This disconnect is intended, so skip the "unexpected disconnect" warning.
+            mongoose.connection.removeAllListeners('disconnected');
+            await mongoose.disconnect();
+            logger.info('MongoDB connection closed.', { label: 'APP' });
 
             process.exit(0);
         } catch (error) {
