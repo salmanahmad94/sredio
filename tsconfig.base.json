@@ -13,7 +13,8 @@
         "skipLibCheck": true,
         "resolveJsonModule": true,
         "paths": {
-            "@sredio/shared": ["./packages/shared/src/index.ts"]
+            "@sredio/shared": ["./packages/shared/src/index.ts"],
+            "@sredio/shared/schemas": ["./packages/shared/src/schemas.ts"]
         }
     }
 }
