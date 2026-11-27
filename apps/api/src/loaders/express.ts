@@ -4,7 +4,7 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import passport from 'passport';
 
-import { authRoutes } from '../api';
+import routes, { authRoutes } from '../api';
 import { logFormat } from '../config/morgan';
 import configurePassport from '../config/passport';
 import logger from '../config/winston';
@@ -43,6 +43,8 @@ export default (app: Express) => {
     });
 
     app.use(authRoutes());
+
+    app.use('/api', routes());
 
     // No route matched.
 

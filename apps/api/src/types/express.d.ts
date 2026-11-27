@@ -1,4 +1,5 @@
 import type { UserDocument } from '../models/user';
+import type { ZapDocument } from '../models/zap';
 
 declare global {
     namespace Express {
@@ -9,6 +10,7 @@ declare global {
         // Values middleware hands to the next step in the request lifecycle.
         interface Locals {
             user?: UserDocument;
+            zap?: ZapDocument;
         }
     }
 }
