@@ -7,7 +7,11 @@ import { setSignatureCookies } from '../src/utils/auth/signatureCookies';
 import { combineJwt } from '../src/utils/auth/splitJwt';
 import { issueTokens } from '../src/utils/auth/tokens';
 
-const { access, refresh } = issueTokens({ id: 'user-1', login: 'octocat' } as UserDocument);
+const { access, refresh } = issueTokens({
+    id: 'user-1',
+    login: 'octocat',
+    tokenVersion: 3
+} as UserDocument);
 const rebuild = (part: { claim: string; signature: string }) =>
     combineJwt(`Bearer ${part.claim}`, part.signature)!;
 const verify = (token: string, secret: string) => jwt.verify(token, secret) as jwt.JwtPayload;
@@ -17,7 +21,7 @@ describe('issueTokens', () => {
         const payload = verify(rebuild(access), 'a'.repeat(32));
         const refreshPayload = verify(rebuild(refresh), 'r'.repeat(32));
 
-        expect(payload).toMatchObject({ sub: 'user-1', login: 'octocat' });
+        expect(payload).toMatchObject({ sub: 'user-1', login: 'octocat', ver: 3 });
         expect(payload.exp! - payload.iat!).toBe(15 * 60);
         expect(refreshPayload.exp! - refreshPayload.iat!).toBe(7 * 24 * 60 * 60);
     });
