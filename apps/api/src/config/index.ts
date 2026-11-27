@@ -6,6 +6,7 @@ const config = {
     app: {
         env: env.NODE_ENV,
         port: env.PORT,
+        url: env.APP_URL.replace(/\/$/, ''),
         logDirectory: env.LOG_DIRECTORY
     },
     mongoose: {
@@ -13,6 +14,19 @@ const config = {
     },
     crypto: {
         key: Buffer.from(env.ENCRYPTION_KEY, 'base64')
+    },
+    auth: {
+        cookies: {
+            secure: env.COOKIE_SECURE
+        }
+    },
+    github: {
+        clientId: env.GITHUB_CLIENT_ID,
+        clientSecret: env.GITHUB_CLIENT_SECRET,
+        callbackUrl: `${env.APP_URL.replace(/\/$/, '')}/auth/github/callback`,
+        // repo: comment on pull requests (including private repos).
+        // admin:repo_hook: add and remove the webhook that triggers a Zap.
+        scopes: ['read:user', 'repo', 'admin:repo_hook']
     }
 };
 
