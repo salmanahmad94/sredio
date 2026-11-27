@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import type { Repository, Zap, ZapInput } from '@sredio/shared';
+import type { Repository, Zap, ZapInput, ZapRun } from '@sredio/shared';
 import { firstValueFrom } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
@@ -29,6 +29,13 @@ export class ApiService {
 
     async deleteZap(id: string): Promise<void> {
         await firstValueFrom(this.http.delete(`/api/zaps/${id}`));
+    }
+
+    async listRuns(id: string): Promise<ZapRun[]> {
+        const { runs } = await firstValueFrom(
+            this.http.get<{ runs: ZapRun[] }>(`/api/zaps/${id}/runs`)
+        );
+        return runs;
     }
 
     async listRepositories(): Promise<Repository[]> {
