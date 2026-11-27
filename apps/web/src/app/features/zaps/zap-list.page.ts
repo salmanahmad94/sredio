@@ -1,4 +1,5 @@
 import { Component, inject, signal, type OnInit } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import type { Zap } from '@sredio/shared';
 
 import { ApiService } from '../../core/api/api.service';
@@ -8,16 +9,15 @@ import { TimeAgoPipe } from '../../shared/time-ago.pipe';
 
 @Component({
     selector: 'app-zap-list-page',
-    imports: [AppIcon, TimeAgoPipe],
+    imports: [RouterLink, AppIcon, TimeAgoPipe],
     template: `
         <div class="flex items-center justify-between gap-4">
             <h1 class="text-2xl font-bold">Zaps</h1>
-            <button
-                type="button"
+            <a
+                routerLink="/zaps/new"
                 class="rounded-lg bg-accent px-4 py-2 font-semibold text-white hover:bg-accent-hover"
+                >New Zap</a
             >
-                New Zap
-            </button>
         </div>
 
         @if (error()) {
@@ -41,7 +41,11 @@ import { TimeAgoPipe } from '../../shared/time-ago.pipe';
                                     [app]="zap.action.app"
                                 />
                             </span>
-                            <span class="font-semibold">{{ zap.name }}</span>
+                            <a
+                                class="font-semibold hover:text-accent"
+                                [routerLink]="['/zaps', zap.id]"
+                                >{{ zap.name }}</a
+                            >
                             <code
                                 class="rounded bg-zinc-100 px-1.5 py-0.5 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"
                             >
@@ -68,7 +72,7 @@ import { TimeAgoPipe } from '../../shared/time-ago.pipe';
                                     "
                                 />
                                 <span
-                                    class="h-[22px] w-[38px] rounded-full bg-zinc-300 transition peer-checked:bg-green-600 peer-focus-visible:ring-3 peer-focus-visible:ring-accent/30 peer-disabled:opacity-50 after:absolute after:top-[3px] after:left-[3px] after:size-4 after:rounded-full after:bg-white after:transition peer-checked:after:translate-x-4 dark:bg-zinc-700"
+                                    class="relative h-[22px] w-[38px] rounded-full bg-zinc-300 transition peer-checked:bg-green-600 peer-focus-visible:ring-3 peer-focus-visible:ring-accent/30 peer-disabled:opacity-50 after:absolute after:top-[3px] after:left-[3px] after:size-4 after:rounded-full after:bg-white after:transition peer-checked:after:translate-x-4 dark:bg-zinc-700"
                                 ></span>
                             </label>
 
