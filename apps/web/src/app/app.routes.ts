@@ -22,5 +22,17 @@ export const routes: Routes = [
         title: 'Zaps · sredio',
         loadComponent: () => import('./features/zaps/zap-list.page').then((m) => m.ZapListPage)
     },
+    {
+        path: 'zaps/new',
+        canActivate: [authGuard],
+        title: 'New Zap · sredio',
+        loadComponent: () => import('./features/zaps/zap-editor.page').then((m) => m.ZapEditorPage)
+    },
+    {
+        path: 'zaps/:id',
+        canActivate: [authGuard],
+        title: 'Edit Zap · sredio',
+        loadComponent: () => import('./features/zaps/zap-editor.page').then((m) => m.ZapEditorPage)
+    },
     { path: '**', redirectTo: 'zaps' }
 ];

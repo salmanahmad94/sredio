@@ -51,6 +51,29 @@ export interface AppDefinition {
     actions: ActionDefinition[];
 }
 
+// Apps that aren't wired up yet: listed so the picker reflects a real product, but they can't be
+// selected, so they only need names.
+const comingSoon = (
+    key: string,
+    name: string,
+    description: string,
+    triggers: [key: string, name: string][],
+    actions: [key: string, name: string][]
+): AppDefinition => ({
+    key,
+    name,
+    description,
+    status: 'coming_soon',
+    triggers: triggers.map(([key, name]) => ({
+        key,
+        name,
+        description: '',
+        fields: [],
+        outputs: []
+    })),
+    actions: actions.map(([key, name]) => ({ key, name, description: '', fields: [] }))
+});
+
 const pullRequestOutputs: OutputField[] = [
     { path: 'pull_request.number', label: 'PR number', sample: '42' },
     { path: 'pull_request.title', label: 'PR title', sample: 'Add retry to webhook handler' },
@@ -106,7 +129,43 @@ export const CATALOG: AppDefinition[] = [
                 ]
             }
         ]
-    }
+    },
+    comingSoon(
+        'gitlab',
+        'GitLab',
+        'Merge requests and pipelines.',
+        [['merge_request_opened', 'Merge request opened']],
+        [['comment_on_merge_request', 'Comment on merge request']]
+    ),
+    comingSoon(
+        'jira',
+        'Jira',
+        'Issues and sprints.',
+        [['issue_created', 'Issue created']],
+        [['create_issue', 'Create issue']]
+    ),
+    comingSoon(
+        'linear',
+        'Linear',
+        'Issues and cycles.',
+        [['issue_created', 'Issue created']],
+        [['create_issue', 'Create issue']]
+    ),
+    comingSoon(
+        'slack',
+        'Slack',
+        'Messages and channels.',
+        [],
+        [['send_message', 'Send channel message']]
+    ),
+    comingSoon(
+        'sentry',
+        'Sentry',
+        'Errors and releases.',
+        [['issue_alert', 'New issue alert']],
+        []
+    ),
+    comingSoon('vercel', 'Vercel', 'Deployments.', [['deployment_failed', 'Deployment failed']], [])
 ];
 
 export const findApp = (appKey: string): AppDefinition | undefined =>
