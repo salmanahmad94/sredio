@@ -7,6 +7,9 @@ const config = {
         env: env.NODE_ENV,
         port: env.PORT,
         logDirectory: env.LOG_DIRECTORY
+    },
+    mongoose: {
+        uri: env.MONGODB_URI
     }
 };
 

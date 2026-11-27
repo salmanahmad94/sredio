@@ -9,6 +9,8 @@ const schema = z.object({
     NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
     PORT: z.coerce.number().int().positive().default(3000),
 
+    MONGODB_URI: z.string().default('mongodb://127.0.0.1:27017/sredio'),
+
     LOG_DIRECTORY: z.string().default('logs')
 });
 
