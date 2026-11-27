@@ -202,4 +202,8 @@
             </button>
         </div>
     </form>
+
+    @if (id(); as zapId) {
+        <app-zap-runs [zapId]="zapId" [live]="savedEnabled()" />
+    }
 }

@@ -17,6 +17,7 @@ import { ApiService } from '../../core/api/api.service';
 import { toApiError, type ApiError } from '../../core/api/api-error';
 
 import { AppPicker } from './app-picker';
+import { ZapRuns } from './zap-runs';
 
 type Config = Record<string, string>;
 
@@ -28,7 +29,7 @@ const defaults = (fields: InputField[]): Config =>
 
 @Component({
     selector: 'app-zap-editor-page',
-    imports: [FormsModule, RouterLink, AppPicker],
+    imports: [FormsModule, RouterLink, AppPicker, ZapRuns],
     templateUrl: './zap-editor.page.html'
 })
 export class ZapEditorPage implements OnInit {
@@ -52,6 +53,8 @@ export class ZapEditorPage implements OnInit {
 
     protected readonly name = signal('');
     protected readonly enabled = signal(false);
+    // Whether the saved Zap is on, as opposed to the unsaved switch. Drives the run history refresh.
+    protected readonly savedEnabled = signal(false);
     protected readonly triggerApp = signal('github');
     protected readonly triggerKey = signal('pull_request_opened');
     protected readonly triggerConfig = signal<Config>({});
@@ -200,7 +203,8 @@ export class ZapEditorPage implements OnInit {
     async remove(): Promise<void> {
         const id = this.id();
 
-        if (!id || !confirm(`Delete "${this.name()}"?`)) return;
+        if (!id || !confirm(`Delete "${this.name()}"? Its webhook and run history go with it.`))
+            return;
 
         this.deleting.set(true);
 
@@ -216,6 +220,7 @@ export class ZapEditorPage implements OnInit {
     private apply(zap: ZapInput): void {
         this.name.set(zap.name);
         this.enabled.set(zap.enabled);
+        this.savedEnabled.set(zap.enabled);
         this.triggerApp.set(zap.trigger.app);
         this.triggerKey.set(zap.trigger.key);
         this.triggerConfig.set({ ...zap.trigger.config });
