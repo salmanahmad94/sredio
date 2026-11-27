@@ -10,6 +10,7 @@ import githubCallbackResponse from './responses/auth/githubCallback';
 import logout from './responses/auth/logout';
 import me from './responses/auth/me';
 import refreshResponse from './responses/auth/refresh';
+import repositories from './responses/github/repositories';
 import createZap from './responses/zaps/create';
 import getZap from './responses/zaps/get';
 import listZaps from './responses/zaps/list';
@@ -59,5 +60,8 @@ export const Responses = {
     },
     Apps: {
         list: listApps
+    },
+    Github: {
+        repositories
     }
 };

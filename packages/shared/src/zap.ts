@@ -17,6 +17,12 @@ export interface ZapInput {
     action: ZapStep;
 }
 
+/** A repository the signed-in user can add webhooks to. */
+export interface Repository {
+    fullName: string;
+    private: boolean;
+}
+
 export interface Zap {
     id: string;
     name: string;
