@@ -1,7 +1,16 @@
-<header class="topbar">
-    <span class="brand">sredio</span>
+<header
+    class="flex items-center border-b border-zinc-200 bg-white px-6 py-3 dark:border-zinc-800 dark:bg-zinc-900"
+>
+    <span class="flex items-center gap-2 text-lg font-bold">
+        <span
+            class="grid size-7 place-items-center rounded-lg bg-accent text-sm text-white"
+            aria-hidden="true"
+            >⚡</span
+        >
+        sredio
+    </span>
 </header>
 
-<main class="page">
+<main class="mx-auto w-full max-w-4xl px-4 py-8 sm:px-6">
     <router-outlet />
 </main>
