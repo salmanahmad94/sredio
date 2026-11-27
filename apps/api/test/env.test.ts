@@ -6,7 +6,9 @@ import { parseEnv } from '../src/config/env';
 const required = {
     ENCRYPTION_KEY: Buffer.alloc(32).toString('base64'),
     GITHUB_CLIENT_ID: 'id',
-    GITHUB_CLIENT_SECRET: 'secret'
+    GITHUB_CLIENT_SECRET: 'secret',
+    ACCESS_TOKEN_SECRET: 'a'.repeat(32),
+    REFRESH_TOKEN_SECRET: 'r'.repeat(32)
 };
 
 describe('parseEnv', () => {
