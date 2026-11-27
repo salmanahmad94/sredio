@@ -20,10 +20,13 @@ export interface Container {
  */
 export const container = {} as Container;
 
-export default (): Container =>
-    Object.assign(container, {
+export default (): Container => {
+    const userService = new UserService(User, logger);
+
+    return Object.assign(container, {
         logger,
-        userService: new UserService(User, logger),
+        userService,
         loginCodeService: new LoginCodeService(LoginCode, config.auth.loginCodeTtlSeconds),
-        zapService: new ZapService(Zap)
+        zapService: new ZapService(Zap, userService, config.app.publicUrl, logger)
     });
+};

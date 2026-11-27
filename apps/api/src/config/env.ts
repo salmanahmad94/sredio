@@ -14,6 +14,9 @@ const schema = z.object({
     // Where people open the app; GitHub redirects back to <APP_URL>/auth/github/callback.
     APP_URL: z.url().default('http://localhost:3000'),
 
+    // Public base URL GitHub sends webhooks to (an ngrok tunnel in development).
+    PUBLIC_URL: z.url().optional(),
+
     MONGODB_URI: z.string().default('mongodb://127.0.0.1:27017/sredio'),
 
     // 32 bytes, base64. Encrypts GitHub tokens and webhook secrets at rest.
