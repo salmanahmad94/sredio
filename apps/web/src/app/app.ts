@@ -10,9 +10,4 @@ import { AuthService } from './core/auth/auth.service';
 })
 export class App {
     protected readonly auth = inject(AuthService);
-
-    constructor() {
-        // Restore a stored session on page load.
-        void this.auth.ensureLoaded();
-    }
 }

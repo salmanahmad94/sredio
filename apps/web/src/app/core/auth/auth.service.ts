@@ -1,7 +1,8 @@
 import { HttpClient, HttpContext, HttpContextToken } from '@angular/common/http';
 import { Injectable, computed, inject, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import type { User } from '@sredio/shared';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, finalize, map, shareReplay, type Observable } from 'rxjs';
 
 interface Session {
     user: User;
@@ -40,9 +41,11 @@ const write = (key: string, value: string | null): void => {
 @Injectable({ providedIn: 'root' })
 export class AuthService {
     private readonly http = inject(HttpClient);
+    private readonly router = inject(Router);
 
     private readonly currentUser = signal<User | null>(null);
     private loaded: Promise<void> | null = null;
+    private refreshing$: Observable<string> | null = null;
 
     readonly user = this.currentUser.asReadonly();
     readonly signedIn = computed(() => this.currentUser() !== null);
@@ -71,7 +74,40 @@ export class AuthService {
         this.loaded = Promise.resolve();
     }
 
-    /** Drops the session locally. */
+    /** Swaps the refresh token for a new pair. Concurrent callers share one request. */
+    refresh(): Observable<string> {
+        this.refreshing$ ??= this.http
+            .post<Session>(
+                '/auth/refresh',
+                {},
+                {
+                    context: this.skipAuth(),
+                    headers: { Authorization: `Bearer ${read(REFRESH_CLAIM) ?? ''}` }
+                }
+            )
+            .pipe(
+                map((session) => {
+                    this.store(session);
+                    return session.accessClaim;
+                }),
+                finalize(() => (this.refreshing$ = null)),
+                shareReplay(1)
+            );
+
+        return this.refreshing$;
+    }
+
+    /** Revokes every token the user holds (the API requires the session for that). */
+    async signOut(): Promise<void> {
+        try {
+            await firstValueFrom(this.http.post('/auth/logout', {}));
+        } finally {
+            this.clear();
+            await this.router.navigateByUrl('/login');
+        }
+    }
+
+    /** Drops the session locally, e.g. after the refresh token expired. */
     clear(): void {
         write(ACCESS_CLAIM, null);
         write(REFRESH_CLAIM, null);

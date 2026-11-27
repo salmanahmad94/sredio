@@ -1,9 +1,12 @@
 import type { Routes } from '@angular/router';
 
+import { authGuard, guestGuard } from './core/auth/auth.guard';
+
 export const routes: Routes = [
     { path: '', pathMatch: 'full', redirectTo: 'zaps' },
     {
         path: 'login',
+        canActivate: [guestGuard],
         title: 'Sign in · sredio',
         loadComponent: () => import('./features/login/login.page').then((m) => m.LoginPage)
     },
@@ -15,6 +18,7 @@ export const routes: Routes = [
     },
     {
         path: 'zaps',
+        canActivate: [authGuard],
         title: 'Zaps · sredio',
         loadComponent: () => import('./features/zaps/zap-list.page').then((m) => m.ZapListPage)
     },
