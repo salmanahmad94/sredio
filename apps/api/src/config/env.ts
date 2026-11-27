@@ -5,6 +5,8 @@ import { z } from 'zod';
  * value stops the app with a readable message instead of failing later at first use.
  */
 
+const secret = z.string().min(32, 'Use at least 32 characters.');
+
 const schema = z.object({
     NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
     PORT: z.coerce.number().int().positive().default(3000),
@@ -19,6 +21,10 @@ const schema = z.object({
         .base64()
         .refine((value) => Buffer.from(value, 'base64').length === 32, 'Must decode to 32 bytes.'),
 
+    ACCESS_TOKEN_SECRET: secret,
+    ACCESS_TOKEN_TTL_SECONDS: z.coerce.number().int().positive().default(900), // 15 minutes
+    REFRESH_TOKEN_SECRET: secret,
+    REFRESH_TOKEN_TTL_SECONDS: z.coerce.number().int().positive().default(604800), // 7 days
     COOKIE_SECURE: z.stringbool().default(false),
 
     GITHUB_CLIENT_ID: z.string().min(1),

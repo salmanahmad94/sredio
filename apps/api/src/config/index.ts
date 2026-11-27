@@ -16,6 +16,14 @@ const config = {
         key: Buffer.from(env.ENCRYPTION_KEY, 'base64')
     },
     auth: {
+        accessToken: {
+            secret: env.ACCESS_TOKEN_SECRET,
+            ttlSeconds: env.ACCESS_TOKEN_TTL_SECONDS
+        },
+        refreshToken: {
+            secret: env.REFRESH_TOKEN_SECRET,
+            ttlSeconds: env.REFRESH_TOKEN_TTL_SECONDS
+        },
         cookies: {
             secure: env.COOKIE_SECURE
         },
