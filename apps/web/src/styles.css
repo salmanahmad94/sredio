@@ -1,0 +1,13 @@
+@import 'tailwindcss';
+
+/* Brand colours, available as utilities: bg-accent, text-accent, hover:bg-accent-hover, ... */
+@theme {
+    --color-accent: #ff4a00;
+    --color-accent-hover: #e04200;
+}
+
+@layer base {
+    body {
+        @apply bg-zinc-50 text-zinc-900 antialiased dark:bg-zinc-950 dark:text-zinc-100;
+    }
+}

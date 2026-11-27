@@ -14,14 +14,17 @@
         "@angular/forms": "^22.3.0",
         "@angular/platform-browser": "^22.3.0",
         "@angular/router": "^22.3.0",
+        "@sredio/shared": "*",
         "rxjs": "~7.8.0",
-        "tslib": "^2.3.0",
-        "@sredio/shared": "*"
+        "tslib": "^2.3.0"
     },
     "devDependencies": {
         "@angular/build": "^22.3.0",
         "@angular/cli": "^22.3.0",
         "@angular/compiler-cli": "^22.3.0",
+        "@tailwindcss/postcss": "^4.3.5",
+        "postcss": "^8.5.34",
+        "tailwindcss": "^4.3.5",
         "typescript": "~6.0.3"
     }
 }
