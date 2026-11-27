@@ -14,6 +14,11 @@ const config = {
     mongoose: {
         uri: env.MONGODB_URI
     },
+    agenda: {
+        collection: env.AGENDA_COLLECTION,
+        processEvery: env.AGENDA_PROCESS_EVERY,
+        maxConcurrency: env.AGENDA_MAX_CONCURRENCY
+    },
     crypto: {
         key: Buffer.from(env.ENCRYPTION_KEY, 'base64')
     },

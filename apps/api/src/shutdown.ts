@@ -3,12 +3,15 @@ import type { Server } from 'node:http';
 import mongoose from 'mongoose';
 
 import logger from './config/winston';
+import type { Container } from './loaders/container';
+
+const DRAIN_TIMEOUT_MS = 10_000;
 
 /**
- * Stops in reverse boot order: stop taking requests, then close the database. Handles Ctrl+C,
- * container/PM2 SIGTERM, and PM2's 'shutdown' message on Windows.
+ * Stops in reverse boot order: stop taking requests, let running jobs finish, then close the
+ * database. Handles Ctrl+C, container/PM2 SIGTERM, and PM2's 'shutdown' message on Windows.
  */
-export default (server: Server) => {
+export default (server: Server, container: Container) => {
     let shuttingDown = false;
 
     const shutdown = async (reason: string) => {
@@ -22,6 +25,9 @@ export default (server: Server) => {
                 server.close((error) => (error ? reject(error) : resolve()))
             );
             logger.info('HTTP server stopped.', { label: 'APP' });
+
+            await container.agenda.drain(DRAIN_TIMEOUT_MS);
+            logger.info('Job queue drained.', { label: 'APP' });
 
             // This disconnect is intended, so skip the "unexpected disconnect" warning.
             mongoose.connection.removeAllListeners('disconnected');

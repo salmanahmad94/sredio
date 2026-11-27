@@ -4,9 +4,9 @@ import { getTrigger } from '../../integrations/registry';
 import { container } from '../../loaders/container';
 
 /**
- * Accepts a verified GitHub delivery and records it as a queued run. Calling GitHub back runs
- * in a job, so this answers well within GitHub's 10 second limit, and deliveries the Zap
- * doesn't care about still get a 2xx so they don't show up as failures in the webhook log.
+ * Accepts a verified GitHub delivery. Calling GitHub back runs in a job, so this answers well
+ * within GitHub's 10 second limit, and deliveries the Zap doesn't care about still get a 2xx
+ * so they don't show up as failures in the repository's webhook log.
  */
 const github: RequestHandler = async (_req, res) => {
     const zap = res.locals.zap!;
@@ -49,6 +49,8 @@ const github: RequestHandler = async (_req, res) => {
         res.status(200).json({ status: 'duplicate' });
         return;
     }
+
+    await container.schedulerService.runZap(run.id);
 
     container.logger.verbose(`Queued run ${run.id} for Zap ${zap.id}: ${summary}`, {
         label: 'WEBHOOKS'
