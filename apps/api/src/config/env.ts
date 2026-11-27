@@ -19,6 +19,11 @@ const schema = z.object({
 
     MONGODB_URI: z.string().default('mongodb://127.0.0.1:27017/sredio'),
 
+    // Background jobs (Agenda), stored in the same database.
+    AGENDA_COLLECTION: z.string().default('agendaJobs'),
+    AGENDA_PROCESS_EVERY: z.string().default('10 seconds'),
+    AGENDA_MAX_CONCURRENCY: z.coerce.number().int().positive().default(20),
+
     // 32 bytes, base64. Encrypts GitHub tokens and webhook secrets at rest.
     ENCRYPTION_KEY: z
         .base64()

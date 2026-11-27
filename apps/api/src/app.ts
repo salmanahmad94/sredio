@@ -8,15 +8,15 @@ import shutdown from './shutdown';
 async function init() {
     const app = express();
 
-    // Register middleware and routes. Any failure stops the boot.
+    // Connect to everything and register middleware and routes. Any failure stops the boot.
 
-    await loaders(app);
+    const container = await loaders(app);
 
     const server = app.listen(config.app.port, () => {
         logger.info(`HTTP server started on port ${config.app.port}.`, { label: 'APP' });
     });
 
-    shutdown(server);
+    shutdown(server, container);
 }
 
 init().catch((error: Error) => {

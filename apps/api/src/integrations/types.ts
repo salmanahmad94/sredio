@@ -1,6 +1,6 @@
 /**
- * Runtime side of the catalog. The catalog in @sredio/shared describes what a trigger is; this
- * interface describes how it runs. Only catalog entries with a runtime can be turned on.
+ * Runtime side of the catalog. The catalog in @sredio/shared describes what a trigger or action
+ * is; these interfaces describe how it runs. Only catalog entries with a runtime can be used.
  */
 
 export interface TriggerEvent {
@@ -34,4 +34,20 @@ export interface TriggerRuntime {
 
     /** A one-line description of the event and a link to its source, for the run history. */
     describe(payload: unknown): { summary: string; url: string | null };
+}
+
+export interface ActionRuntime {
+    run(params: {
+        token: string;
+        config: Record<string, string>;
+        payload: unknown;
+    }): Promise<{ url: string | null }>;
+}
+
+/** An action failure that retrying won't fix, e.g. a 404 or a missing permission. */
+export class PermanentError extends Error {
+    constructor(message: string) {
+        super(message);
+        this.name = 'PermanentError';
+    }
 }

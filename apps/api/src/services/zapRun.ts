@@ -31,6 +31,39 @@ export default class ZapRunService {
         }
     }
 
+    findWithPayload(runId: string): Promise<ZapRunDocument | null> {
+        return this.runs.findById(runId).select('+payload').exec();
+    }
+
+    async markRetrying(runId: string, error: string, attempts: number): Promise<void> {
+        await this.runs.updateOne(
+            { _id: runId },
+            { $set: { status: 'retrying', error, attempts } }
+        );
+    }
+
+    async markSucceeded(runId: string, outputUrl: string | null, attempts: number): Promise<void> {
+        await this.runs.updateOne(
+            { _id: runId },
+            {
+                $set: {
+                    status: 'succeeded',
+                    outputUrl,
+                    attempts,
+                    error: null,
+                    finishedAt: new Date()
+                }
+            }
+        );
+    }
+
+    async markFailed(runId: string, error: string): Promise<void> {
+        await this.runs.updateOne(
+            { _id: runId },
+            { $set: { status: 'failed', error, finishedAt: new Date() } }
+        );
+    }
+
     async removeForZap(zapId: string): Promise<void> {
         await this.runs.deleteMany({ zap: zapId });
     }
