@@ -10,6 +10,9 @@ const config = {
     },
     mongoose: {
         uri: env.MONGODB_URI
+    },
+    crypto: {
+        key: Buffer.from(env.ENCRYPTION_KEY, 'base64')
     }
 };
 
