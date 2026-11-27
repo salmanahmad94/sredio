@@ -8,6 +8,7 @@ import {
     findTrigger,
     renderTemplate,
     samplePayload,
+    type CopilotDraft,
     type InputField,
     type Repository,
     type ZapInput
@@ -48,6 +49,8 @@ export class ZapEditorPage implements OnInit {
     protected readonly deleting = signal(false);
     protected readonly error = signal<ApiError | null>(null);
     protected readonly notice = signal<string | null>(null);
+    // The Copilot's explanation when the form was filled from a draft.
+    protected readonly copilotNote = signal<string | null>(null);
     protected readonly repositories = signal<Repository[] | null>(null);
     protected readonly repositoriesError = signal<string | null>(null);
 
@@ -89,8 +92,15 @@ export class ZapEditorPage implements OnInit {
             if (id) {
                 this.apply(await this.api.getZap(id));
             } else {
-                this.name.set('Thank pull request authors');
-                this.actionConfig.set(defaults(this.action()?.fields ?? []));
+                const draft = (history.state as { draft?: CopilotDraft } | null)?.draft;
+
+                if (draft) {
+                    this.apply(draft.zap);
+                    this.copilotNote.set(draft.explanation);
+                } else {
+                    this.name.set('Thank pull request authors');
+                    this.actionConfig.set(defaults(this.action()?.fields ?? []));
+                }
             }
         } catch (error) {
             this.error.set(toApiError(error));

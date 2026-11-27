@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import type { Repository, Zap, ZapInput, ZapRun } from '@sredio/shared';
+import type { CopilotDraft, Repository, Zap, ZapInput, ZapRun } from '@sredio/shared';
 import { firstValueFrom } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
@@ -36,6 +36,10 @@ export class ApiService {
             this.http.get<{ runs: ZapRun[] }>(`/api/zaps/${id}/runs`)
         );
         return runs;
+    }
+
+    draftZap(prompt: string): Promise<CopilotDraft> {
+        return firstValueFrom(this.http.post<CopilotDraft>('/api/copilot/drafts', { prompt }));
     }
 
     async listRepositories(): Promise<Repository[]> {
