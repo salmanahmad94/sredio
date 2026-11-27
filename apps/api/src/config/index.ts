@@ -7,6 +7,8 @@ const config = {
         env: env.NODE_ENV,
         port: env.PORT,
         url: env.APP_URL.replace(/\/$/, ''),
+        // Where GitHub delivers webhooks. Without it, Zaps can be saved but not turned on.
+        publicUrl: env.PUBLIC_URL?.replace(/\/$/, ''),
         logDirectory: env.LOG_DIRECTORY
     },
     mongoose: {

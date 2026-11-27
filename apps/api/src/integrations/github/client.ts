@@ -11,6 +11,11 @@ export const githubStatus = (error: unknown): number | undefined =>
         ? Number((error as { status: unknown }).status)
         : undefined;
 
+export const splitRepository = (fullName: string): { owner: string; repo: string } => {
+    const [owner = '', repo = ''] = fullName.split('/');
+    return { owner, repo };
+};
+
 /** GitHub rejected the stored token, e.g. the user revoked access. Only a new sign-in fixes it. */
 export const signInAgainError = (): HttpError =>
     new HttpError(422, "GitHub didn't accept your saved sign-in. Sign out and sign in again.");
