@@ -1,8 +1,19 @@
 import express from 'express';
+import morgan from 'morgan';
 
-const port = Number(process.env.PORT ?? 3000);
+import config from './config';
+import { logFormat } from './config/morgan';
+import logger from './config/winston';
 
 const app = express();
+
+// Log every request through Winston.
+
+app.use(
+    morgan(logFormat, {
+        stream: { write: (message) => logger.http(message.trim(), { label: 'HTTP' }) }
+    })
+);
 
 // Health check.
 
@@ -10,6 +21,6 @@ app.get('/status', (_req, res) => {
     res.status(200).json({ status: 'ok' });
 });
 
-app.listen(port, () => {
-    console.log(`HTTP server started on port ${port}.`);
+app.listen(config.app.port, () => {
+    logger.info(`HTTP server started on port ${config.app.port}.`, { label: 'APP' });
 });
