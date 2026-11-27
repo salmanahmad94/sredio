@@ -11,6 +11,9 @@
         "isolatedModules": true,
         "verbatimModuleSyntax": true,
         "skipLibCheck": true,
-        "resolveJsonModule": true
+        "resolveJsonModule": true,
+        "paths": {
+            "@sredio/shared": ["./packages/shared/src/index.ts"]
+        }
     }
 }
