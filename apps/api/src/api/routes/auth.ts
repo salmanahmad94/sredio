@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import { Authentication } from '../middleware';
+import { Authentication, Responses } from '../middleware';
 
 export default (app: Router) => {
     const router = Router();
@@ -8,4 +8,6 @@ export default (app: Router) => {
     app.use('/auth', router);
 
     router.get('/github', Authentication.githubLogin);
+
+    router.get('/github/callback', Authentication.githubCallback, Responses.Auth.githubCallback);
 };
