@@ -3,7 +3,11 @@ import { describe, expect, it } from 'vitest';
 import { parseEnv } from '../src/config/env';
 
 // The variables that have no default.
-const required = { ENCRYPTION_KEY: Buffer.alloc(32).toString('base64') };
+const required = {
+    ENCRYPTION_KEY: Buffer.alloc(32).toString('base64'),
+    GITHUB_CLIENT_ID: 'id',
+    GITHUB_CLIENT_SECRET: 'secret'
+};
 
 describe('parseEnv', () => {
     it('applies defaults for everything else', () => {

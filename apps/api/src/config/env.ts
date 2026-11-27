@@ -9,12 +9,20 @@ const schema = z.object({
     NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
     PORT: z.coerce.number().int().positive().default(3000),
 
+    // Where people open the app; GitHub redirects back to <APP_URL>/auth/github/callback.
+    APP_URL: z.url().default('http://localhost:3000'),
+
     MONGODB_URI: z.string().default('mongodb://127.0.0.1:27017/sredio'),
 
     // 32 bytes, base64. Encrypts GitHub tokens and webhook secrets at rest.
     ENCRYPTION_KEY: z
         .base64()
         .refine((value) => Buffer.from(value, 'base64').length === 32, 'Must decode to 32 bytes.'),
+
+    COOKIE_SECURE: z.stringbool().default(false),
+
+    GITHUB_CLIENT_ID: z.string().min(1),
+    GITHUB_CLIENT_SECRET: z.string().min(1),
 
     LOG_DIRECTORY: z.string().default('logs')
 });

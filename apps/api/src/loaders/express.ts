@@ -1,8 +1,12 @@
+import cookieParser from 'cookie-parser';
 import express, { type ErrorRequestHandler, type Express } from 'express';
 import helmet from 'helmet';
 import morgan from 'morgan';
+import passport from 'passport';
 
+import { authRoutes } from '../api';
 import { logFormat } from '../config/morgan';
+import configurePassport from '../config/passport';
 import logger from '../config/winston';
 import HttpError from '../errors/HttpError';
 
@@ -27,11 +31,18 @@ export default (app: Express) => {
 
     app.use(express.urlencoded({ extended: true }));
 
+    app.use(cookieParser());
+
+    configurePassport();
+    app.use(passport.initialize());
+
     // Health check.
 
     app.get('/status', (_req, res) => {
         res.status(200).json({ status: 'ok' });
     });
+
+    app.use(authRoutes());
 
     // No route matched.
 
