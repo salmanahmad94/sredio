@@ -1,4 +1,5 @@
 import type { UserDocument } from '../models/user';
+import type { TriggerEvent } from '../integrations/types';
 import type { ZapDocument } from '../models/zap';
 
 declare global {
@@ -11,6 +12,7 @@ declare global {
         interface Locals {
             user?: UserDocument;
             zap?: ZapDocument;
+            event?: TriggerEvent;
         }
     }
 }
