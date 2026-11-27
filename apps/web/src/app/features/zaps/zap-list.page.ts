@@ -6,10 +6,11 @@ import { ApiService } from '../../core/api/api.service';
 import { toApiError } from '../../core/api/api-error';
 import { AppIcon } from '../../shared/app-icon';
 import { TimeAgoPipe } from '../../shared/time-ago.pipe';
+import { CopilotPanel } from '../copilot/copilot-panel';
 
 @Component({
     selector: 'app-zap-list-page',
-    imports: [RouterLink, AppIcon, TimeAgoPipe],
+    imports: [RouterLink, AppIcon, TimeAgoPipe, CopilotPanel],
     template: `
         <div class="flex items-center justify-between gap-4">
             <h1 class="text-2xl font-bold">Zaps</h1>
@@ -19,6 +20,8 @@ import { TimeAgoPipe } from '../../shared/time-ago.pipe';
                 >New Zap</a
             >
         </div>
+
+        <app-copilot-panel class="mt-4 block" />
 
         @if (error()) {
             <p
@@ -94,7 +97,7 @@ import { TimeAgoPipe } from '../../shared/time-ago.pipe';
                     <h2 class="text-lg font-semibold">No Zaps yet</h2>
                     <p class="mt-1 text-zinc-500 dark:text-zinc-400">
                         A Zap connects a trigger to an action, like commenting on every pull request
-                        opened in a repository.
+                        opened in a repository. Create one, or describe it to the Copilot above.
                     </p>
                 </div>
             }
