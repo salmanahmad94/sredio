@@ -32,6 +32,12 @@ export interface ZapRun {
     finishedAt: string | null;
 }
 
+/** A Zap drafted by the Copilot from a description, for the user to review in the editor. */
+export interface CopilotDraft {
+    zap: ZapInput;
+    explanation: string;
+}
+
 /** A repository the signed-in user can add webhooks to. */
 export interface Repository {
     fullName: string;

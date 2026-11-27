@@ -37,6 +37,10 @@ const config = {
         // One-time code handed to the browser after the GitHub callback and exchanged for tokens.
         loginCodeTtlSeconds: 60
     },
+    copilot: {
+        apiKey: env.OPENAI_API_KEY,
+        model: env.COPILOT_MODEL
+    },
     github: {
         clientId: env.GITHUB_CLIENT_ID,
         clientSecret: env.GITHUB_CLIENT_SECRET,

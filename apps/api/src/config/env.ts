@@ -38,6 +38,10 @@ const schema = z.object({
     GITHUB_CLIENT_ID: z.string().min(1),
     GITHUB_CLIENT_SECRET: z.string().min(1),
 
+    // The Copilot drafts Zaps from a description. Optional: without a key it answers 503.
+    OPENAI_API_KEY: z.string().optional(),
+    COPILOT_MODEL: z.string().default('gpt-6.2-sol'),
+
     LOG_DIRECTORY: z.string().default('logs')
 });
 

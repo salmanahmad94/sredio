@@ -2,6 +2,7 @@ import { Router } from 'express';
 
 import apps from './routes/apps';
 import auth from './routes/auth';
+import copilot from './routes/copilot';
 import github from './routes/github';
 import zaps from './routes/zaps';
 
@@ -21,6 +22,7 @@ export default (): Router => {
     zaps(api);
     apps(api);
     github(api);
+    copilot(api);
 
     return api;
 };
