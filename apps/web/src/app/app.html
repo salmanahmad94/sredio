@@ -1,5 +1,5 @@
 <header
-    class="flex items-center border-b border-zinc-200 bg-white px-6 py-3 dark:border-zinc-800 dark:bg-zinc-900"
+    class="flex items-center justify-between border-b border-zinc-200 bg-white px-6 py-3 dark:border-zinc-800 dark:bg-zinc-900"
 >
     <span class="flex items-center gap-2 text-lg font-bold">
         <span
@@ -9,6 +9,15 @@
         >
         sredio
     </span>
+
+    @if (auth.user(); as user) {
+        <span class="flex items-center gap-2 text-sm font-medium">
+            @if (user.avatarUrl) {
+                <img class="size-7 rounded-full" [src]="user.avatarUrl" alt="" />
+            }
+            {{ user.login }}
+        </span>
+    }
 </header>
 
 <main class="mx-auto w-full max-w-4xl px-4 py-8 sm:px-6">
