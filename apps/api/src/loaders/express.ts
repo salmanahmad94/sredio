@@ -1,3 +1,6 @@
+import fs from 'node:fs';
+import { fileURLToPath } from 'node:url';
+
 import cookieParser from 'cookie-parser';
 import express, { type ErrorRequestHandler, type Express } from 'express';
 import helmet from 'helmet';
@@ -5,11 +8,15 @@ import morgan from 'morgan';
 import passport from 'passport';
 
 import routes, { authRoutes } from '../api';
+import config from '../config';
 import { logFormat } from '../config/morgan';
 import configurePassport from '../config/passport';
 import logger from '../config/winston';
 import HttpError from '../errors/HttpError';
 import webhooks from '../webhooks';
+
+// The Angular build, next to this API's own build (apps/api/dist/app.js → apps/web/dist/web/browser).
+const WEB_DIST = fileURLToPath(new URL('../../web/dist/web/browser', import.meta.url));
 
 export default (app: Express) => {
     // Behind ngrok or a load balancer: trust X-Forwarded-* for the client IP and protocol.
@@ -26,7 +33,16 @@ export default (app: Express) => {
 
     // Security headers: https://helmetjs.github.io
 
-    app.use(helmet());
+    app.use(
+        helmet({
+            contentSecurityPolicy: {
+                directives: {
+                    // GitHub avatars in the header.
+                    'img-src': ["'self'", 'data:', 'https://avatars.githubusercontent.com']
+                }
+            }
+        })
+    );
 
     // Webhooks need the raw body for signature checks, so they go before the JSON parser.
 
@@ -50,6 +66,16 @@ export default (app: Express) => {
     app.use(authRoutes());
 
     app.use('/api', routes());
+
+    // In production, serve the Angular app and let its router handle unknown paths.
+
+    if (config.app.env === 'production' && fs.existsSync(WEB_DIST)) {
+        app.use(express.static(WEB_DIST, { index: false }));
+
+        app.get(/^\/(?!api\/|auth\/|webhooks\/).*/, (_req, res) => {
+            res.sendFile(`${WEB_DIST}/index.html`);
+        });
+    }
 
     // No route matched.
 
