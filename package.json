@@ -4,13 +4,14 @@
     "private": true,
     "description": "A small Zapier-inspired workflow automation app (TypeScript, MEAN stack).",
     "workspaces": [
+        "packages/*",
         "apps/*"
     ],
     "scripts": {
         "dev": "npm run dev -w @sredio/api",
         "test": "npm test -w @sredio/api",
-        "typecheck": "npm run typecheck -w @sredio/api",
-        "format": "prettier --write \"apps/*/src/**/*.ts\""
+        "typecheck": "npm run typecheck -w @sredio/shared && npm run typecheck -w @sredio/api",
+        "format": "prettier --write \"apps/*/src/**/*.ts\" \"packages/*/src/**/*.ts\""
     },
     "devDependencies": {
         "prettier": "^3.8.1",
