@@ -8,12 +8,13 @@
         "apps/*"
     ],
     "scripts": {
-        "dev": "npm run dev -w @sredio/api",
+        "dev": "concurrently -n api,web -c blue,magenta \"npm run dev -w @sredio/api\" \"npm run start -w @sredio/web\"",
         "test": "npm test -w @sredio/api",
-        "typecheck": "npm run typecheck -w @sredio/shared && npm run typecheck -w @sredio/api",
-        "format": "prettier --write \"apps/*/src/**/*.ts\" \"packages/*/src/**/*.ts\""
+        "typecheck": "npm run typecheck -w @sredio/shared && npm run typecheck -w @sredio/api && npm run typecheck -w @sredio/web",
+        "format": "prettier --write \"apps/*/src/**/*.{ts,html,scss}\" \"packages/*/src/**/*.ts\""
     },
     "devDependencies": {
+        "concurrently": "^10.0.7",
         "prettier": "^3.8.1",
         "typescript": "~6.0.3"
     },
