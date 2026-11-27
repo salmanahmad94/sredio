@@ -1,26 +1,25 @@
 import express from 'express';
-import morgan from 'morgan';
 
 import config from './config';
-import { logFormat } from './config/morgan';
 import logger from './config/winston';
+import loaders from './loaders';
+import shutdown from './shutdown';
 
-const app = express();
+async function init() {
+    const app = express();
 
-// Log every request through Winston.
+    // Register middleware and routes. Any failure stops the boot.
 
-app.use(
-    morgan(logFormat, {
-        stream: { write: (message) => logger.http(message.trim(), { label: 'HTTP' }) }
-    })
-);
+    await loaders(app);
 
-// Health check.
+    const server = app.listen(config.app.port, () => {
+        logger.info(`HTTP server started on port ${config.app.port}.`, { label: 'APP' });
+    });
 
-app.get('/status', (_req, res) => {
-    res.status(200).json({ status: 'ok' });
-});
+    shutdown(server);
+}
 
-app.listen(config.app.port, () => {
-    logger.info(`HTTP server started on port ${config.app.port}.`, { label: 'APP' });
+init().catch((error: Error) => {
+    logger.error(error.stack ?? error.message, { label: 'APP' });
+    process.exit(1);
 });
