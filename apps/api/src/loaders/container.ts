@@ -2,13 +2,16 @@ import config from '../config';
 import logger, { type Logger } from '../config/winston';
 import LoginCode from '../models/loginCode';
 import User from '../models/user';
+import Zap from '../models/zap';
 import LoginCodeService from '../services/loginCode';
 import UserService from '../services/user';
+import ZapService from '../services/zap';
 
 export interface Container {
     logger: Logger;
     userService: UserService;
     loginCodeService: LoginCodeService;
+    zapService: ZapService;
 }
 
 /**
@@ -21,5 +24,6 @@ export default (): Container =>
     Object.assign(container, {
         logger,
         userService: new UserService(User, logger),
-        loginCodeService: new LoginCodeService(LoginCode, config.auth.loginCodeTtlSeconds)
+        loginCodeService: new LoginCodeService(LoginCode, config.auth.loginCodeTtlSeconds),
+        zapService: new ZapService(Zap)
     });
