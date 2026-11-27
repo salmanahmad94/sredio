@@ -51,6 +51,12 @@ export default (agenda: Agenda) => {
 
                 await container.zapRunService.markSucceeded(runId, output.url, attempt);
 
+                container.broadcastService.runFinished({
+                    zapId: zap.id,
+                    runId,
+                    status: 'succeeded'
+                });
+
                 container.logger.verbose(`Run ${runId} of Zap ${zap.id} succeeded: ${output.url}`, {
                     label: 'JOB'
                 });
@@ -81,6 +87,12 @@ export default (agenda: Agenda) => {
             if (!run) return;
 
             await container.zapRunService.markFailed(runId, error.message);
+
+            container.broadcastService.runFinished({
+                zapId: run.zap.toString(),
+                runId,
+                status: 'failed'
+            });
 
             container.logger.error(`Run ${runId} failed: ${error.message}`, { label: 'JOB' });
         } catch (markError) {

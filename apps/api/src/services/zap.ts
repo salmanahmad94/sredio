@@ -121,6 +121,13 @@ export default class ZapService {
         await zap.deleteOne();
     }
 
+    async recordRun(zapId: string): Promise<void> {
+        await this.zaps.updateOne(
+            { _id: zapId },
+            { $set: { lastRunAt: new Date() }, $inc: { runCount: 1 } }
+        );
+    }
+
     private webhookUrl(zapId: string): string {
         if (!this.publicUrl) {
             throw new HttpError(

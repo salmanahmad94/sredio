@@ -35,6 +35,10 @@ export default class ZapRunService {
         return this.runs.findById(runId).select('+payload').exec();
     }
 
+    listForZap(zapId: string, limit = 20): Promise<ZapRunDocument[]> {
+        return this.runs.find({ zap: zapId }).sort({ createdAt: -1 }).limit(limit).exec();
+    }
+
     async markRetrying(runId: string, error: string, attempts: number): Promise<void> {
         await this.runs.updateOne(
             { _id: runId },
