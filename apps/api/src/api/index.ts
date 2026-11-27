@@ -2,6 +2,7 @@ import { Router } from 'express';
 
 import apps from './routes/apps';
 import auth from './routes/auth';
+import github from './routes/github';
 import zaps from './routes/zaps';
 
 /** Sign-in routes, mounted at the root so GitHub's callback URL stays short: /auth/... */
@@ -19,6 +20,7 @@ export default (): Router => {
 
     zaps(api);
     apps(api);
+    github(api);
 
     return api;
 };
