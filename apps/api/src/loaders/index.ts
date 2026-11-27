@@ -5,6 +5,7 @@ import containerLoader from './container';
 import expressLoader from './express';
 import jobsLoader from './jobs';
 import mongooseLoader from './mongoose';
+import subscribersLoader from './subscribers';
 
 export default async (app: Express) => {
     // Connect to MongoDB. Throws if it can't, which stops the boot.
@@ -22,6 +23,10 @@ export default async (app: Express) => {
     // Register job definitions and start processing.
 
     await jobsLoader(agenda);
+
+    // Register event listeners.
+
+    subscribersLoader();
 
     // Middleware, routes and error handling.
 

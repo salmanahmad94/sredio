@@ -15,6 +15,7 @@ import createZap from './responses/zaps/create';
 import getZap from './responses/zaps/get';
 import listZaps from './responses/zaps/list';
 import removeZap from './responses/zaps/remove';
+import zapRuns from './responses/zaps/runs';
 import updateZap from './responses/zaps/update';
 import * as rules from './validation/rules';
 import { body } from './validation/validate';
@@ -56,7 +57,8 @@ export const Responses = {
         get: getZap,
         create: createZap,
         update: updateZap,
-        remove: removeZap
+        remove: removeZap,
+        runs: zapRuns
     },
     Apps: {
         list: listApps

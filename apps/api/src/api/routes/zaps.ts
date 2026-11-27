@@ -42,4 +42,12 @@ export default (api: Router) => {
         Permissions.Zaps.ownsZap,
         Responses.Zaps.remove
     );
+
+    router.get(
+        '/:id/runs',
+        Authentication.authWall,
+        Helpers.Zaps.loadZap,
+        Permissions.Zaps.ownsZap,
+        Responses.Zaps.runs
+    );
 };

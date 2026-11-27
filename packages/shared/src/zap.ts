@@ -17,6 +17,21 @@ export interface ZapInput {
     action: ZapStep;
 }
 
+export type ZapRunStatus = 'queued' | 'retrying' | 'succeeded' | 'failed';
+
+/** One time a Zap ran, shown in the editor's run history. */
+export interface ZapRun {
+    id: string;
+    status: ZapRunStatus;
+    summary: string;
+    sourceUrl: string | null;
+    outputUrl: string | null;
+    error: string | null;
+    attempts: number;
+    createdAt: string;
+    finishedAt: string | null;
+}
+
 /** A repository the signed-in user can add webhooks to. */
 export interface Repository {
     fullName: string;

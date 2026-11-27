@@ -12,7 +12,7 @@ const githubCallback: RequestHandler = async (_req, res) => {
 
     const code = await container.loginCodeService.create(user.id);
 
-    await container.userService.touchLastLogin(user.id);
+    container.broadcastService.login(user);
 
     res.redirect(`${config.app.url}/login/callback?code=${encodeURIComponent(code)}`);
 };
