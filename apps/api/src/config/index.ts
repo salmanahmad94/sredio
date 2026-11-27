@@ -18,7 +18,9 @@ const config = {
     auth: {
         cookies: {
             secure: env.COOKIE_SECURE
-        }
+        },
+        // One-time code handed to the browser after the GitHub callback and exchanged for tokens.
+        loginCodeTtlSeconds: 60
     },
     github: {
         clientId: env.GITHUB_CLIENT_ID,
